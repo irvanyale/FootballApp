@@ -36,4 +36,9 @@
     <item name="txt_homeTeamLogo" type="id" />
     <item name="txt_awayTeamLogo" type="id" />
 
+    <!--Match Layout-->
+    <item name="match_spinner" type="id" />
+    <item name="match_swipeRefresh" type="id" />
+    <item name="match_relativeLayout" type="id" />
+
 </resources>
