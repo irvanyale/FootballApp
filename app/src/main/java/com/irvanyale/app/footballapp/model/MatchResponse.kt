@@ -1,4 +1,4 @@
-package com.irvanyale.app.project4.model
+package com.irvanyale.app.footballapp.model
 
 import com.google.gson.annotations.SerializedName
 
