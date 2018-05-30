@@ -79,13 +79,10 @@ class MatchFragment :Fragment(), AnkoComponent<Context> {
     }
 
     fun setupViewpager(viewPager: ViewPager){
-        val fm = fragmentManager
-        if (fm != null){
-            val viewPagerAdapter = ViewPagerAdapter(fm)
-            viewPagerAdapter.addFragment(NextMatchFragment(), getString(title_next))
-            viewPagerAdapter.addFragment(PrevMatchFragment(), getString(title_prev))
-            viewPager.adapter = viewPagerAdapter
-        }
+        val viewPagerAdapter = ViewPagerAdapter(childFragmentManager)
+        viewPagerAdapter.addFragment(NextMatchFragment(), getString(title_next))
+        viewPagerAdapter.addFragment(PrevMatchFragment(), getString(title_prev))
+        viewPager.adapter = viewPagerAdapter
     }
 
     class ViewPagerAdapter(fragmentManager: FragmentManager) :
