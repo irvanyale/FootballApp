@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="main_container" type="id" />
+    <item name="prev_match" type="id" />
+    <item name="next_match" type="id" />
+    <item name="bottom_nav_view" type="id" />
+    <item name="img_prev_match" type="id" />
+    <item name="img_next_match" type="id" />
+
+    <item name="tabLayout_match" type="id" />
+    <item name="viewPager_match" type="id" />
+
+    <item name="rly_match" type="id" />
+    <item name="swipeRefresh" type="id" />
+    <item name="lnly_match" type="id" />
+    <item name="txt_date_match" type="id" />
+    <item name="txt_time_match" type="id" />
+    <item name="txt_home_score" type="id" />
+    <item name="txt_away_score" type="id" />
+    <item name="txt_home_team" type="id" />
+    <item name="txt_away_team" type="id" />
+    <item name="txt_homeGoalDetails" type="id" />
+    <item name="txt_awayGoalDetails" type="id" />
+    <item name="txt_homeShots" type="id" />
+    <item name="txt_awayShots" type="id" />
+    <item name="txt_homeLineupGoalkeeper" type="id" />
+    <item name="txt_homeLineupDefense" type="id" />
+    <item name="txt_homeLineupMidfield" type="id" />
+    <item name="txt_homeLineupForward" type="id" />
+    <item name="txt_homeLineupSubstitutes" type="id" />
+    <item name="txt_awayLineupGoalkeeper" type="id" />
+    <item name="txt_awayLineupDefense" type="id" />
+    <item name="txt_awayLineupMidfield" type="id" />
+    <item name="txt_awayLineupForward" type="id" />
+    <item name="txt_awayLineupSubstitutes" type="id" />
+    <item name="txt_homeTeamLogo" type="id" />
+    <item name="txt_awayTeamLogo" type="id" />
+
+</resources>

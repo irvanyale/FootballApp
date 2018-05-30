@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">FootballApp</string>
+    <string name="app_name">Football App</string>
+
+    <string name="matches">Matches</string>
+    <string name="teams">Teams</string>
+    <string name="favorites">Favorites</string>
+
+    <string name="title_next">Next</string>
+    <string name="title_prev">Prev</string>
+
+    <string name="v">v</string>
+    <string name="goals">Goals</string>
+    <string name="shots">Shots</string>
+    <string name="lineup">Lineups</string>
+    <string name="goalkeeper">Goal Keeper</string>
+    <string name="defender">Defender</string>
+    <string name="midfielder">Midfielder</string>
+    <string name="forward">Forward</string>
+    <string name="substitutes">Substitutes</string>
 </resources>
