@@ -17,14 +17,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.elevation = 0f
-
         relativeLayout {
             lparams(width = matchParent, height = matchParent)
 
             frameLayout {
                 id = R.id.main_container
-            }.lparams(width = matchParent, height = wrapContent){
+            }.lparams(width = matchParent, height = matchParent){
                 above(R.id.bottom_nav_view)
             }
 

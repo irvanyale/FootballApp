@@ -122,7 +122,7 @@ class MatchSearchActivity : AppCompatActivity(), MainView, OnItemClickCallback {
 
                     override fun onQueryTextChange(newText: String?): Boolean {
                         presenter.getSearchMatch(newText)
-                        return false
+                        return true
                     }
 
                 })
@@ -133,7 +133,7 @@ class MatchSearchActivity : AppCompatActivity(), MainView, OnItemClickCallback {
     }
 
     override fun onItemClicked(match: Match) {
-
+        startActivity<DetailMatchActivity>(DetailMatchActivity.FOOTBALL_MATCH_ID to match.matchId)
     }
 
     override fun showLoading() {

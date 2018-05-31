@@ -4,7 +4,9 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.irvanyale.app.footballapp.R
 import org.jetbrains.anko.*
@@ -25,6 +27,10 @@ class MatchListLayout(ctx: Context): LinearLayout(ctx) {
                 bottomMargin = dip(10)
             }
 
+            view {
+                background = ContextCompat.getDrawable(ctx, R.drawable.shadow)
+            }.lparams(width = matchParent, height = dip(1))
+
             swipeRefreshLayout {
                 id = R.id.match_swipeRefresh
                 setColorSchemeResources(R.color.colorAccent,
@@ -42,8 +48,10 @@ class MatchListLayout(ctx: Context): LinearLayout(ctx) {
 
                         imageView {
                             image = ContextCompat.getDrawable(ctx, R.drawable.ic_event_busy)
+                            scaleType = ImageView.ScaleType.CENTER_INSIDE
                         }.lparams(width = wrapContent, height = wrapContent){
-                            centerInParent()
+                            centerHorizontally()
+                            topMargin = dip(20)
                         }
                     }
 

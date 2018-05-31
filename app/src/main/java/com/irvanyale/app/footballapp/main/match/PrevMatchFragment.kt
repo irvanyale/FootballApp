@@ -101,7 +101,7 @@ class PrevMatchFragment : Fragment(), AnkoComponent<Context>, MainView, OnItemCl
     }
 
     override fun onItemClicked(match: Match) {
-
+        ctx.startActivity<DetailMatchActivity>(DetailMatchActivity.FOOTBALL_MATCH_ID to match.matchId)
     }
 
     override fun showLoading() {

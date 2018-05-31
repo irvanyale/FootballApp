@@ -35,6 +35,7 @@ class MatchUI : AnkoComponent<ViewGroup> {
 
             linearLayout {
                 id = R.id.lnly_match
+                padding = dip(8)
                 orientation = LinearLayout.VERTICAL
                 lparams(width = matchParent, height = wrapContent)
 

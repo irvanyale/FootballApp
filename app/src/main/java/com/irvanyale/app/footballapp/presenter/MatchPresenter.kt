@@ -19,43 +19,43 @@ class MatchPresenter(private val view: MainView,
 
     fun getPrevMatches(leagueId: String?) {
         view.showLoading()
-        async(context.main) {
+        async(UI) {
             val data = bg {
                 gson.fromJson(apiRepository
                         .doRequest(TheSportDBApi.getPrevMatch(leagueId)),
                         MatchResponse::class.java
                 )
             }
-            view.hideLoading()
             view.showMatch(data.await().matches)
+            view.hideLoading()
         }
     }
 
     fun getNextMatches(leagueId: String?) {
         view.showLoading()
-        async(context.main) {
+        async(UI) {
             val data = bg {
                 gson.fromJson(apiRepository
                         .doRequest(TheSportDBApi.getNextMatch(leagueId)),
                         MatchResponse::class.java
                 )
             }
-            view.hideLoading()
             view.showMatch(data.await().matches)
+            view.hideLoading()
         }
     }
 
     fun getDetailMatches(matchId: String?) {
         view.showLoading()
-        async(context.main) {
+        async(UI) {
             val data = bg {
                 gson.fromJson(apiRepository
                         .doRequest(TheSportDBApi.getDetailMatch(matchId)),
                         MatchResponse::class.java
                 )
             }
-            view.hideLoading()
             view.showMatch(data.await().matches)
+            view.hideLoading()
         }
     }
 
@@ -92,8 +92,8 @@ class MatchPresenter(private val view: MainView,
                         MatchSearchResponse::class.java
                 )
             }
-            view.hideLoading()
             view.showMatch(data.await().matches)
+            view.hideLoading()
         }
     }
 }
