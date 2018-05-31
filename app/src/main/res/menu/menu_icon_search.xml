@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ahmadrosid.searchaurocomplete.MainActivity">
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/action_icon_search"
+        android:title="@string/search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom|collapseActionView" />
+</menu>

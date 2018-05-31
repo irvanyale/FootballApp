@@ -10,6 +10,9 @@
     <item name="tabLayout_match" type="id" />
     <item name="viewPager_match" type="id" />
 
+    <item name="team_badge" type="id" />
+    <item name="team_name" type="id" />
+
     <item name="rly_match" type="id" />
     <item name="swipeRefresh" type="id" />
     <item name="lnly_match" type="id" />
@@ -39,6 +42,7 @@
     <!--Match Layout-->
     <item name="match_spinner" type="id" />
     <item name="match_swipeRefresh" type="id" />
+    <item name="match_recyclerView" type="id" />
     <item name="match_relativeLayout" type="id" />
 
 </resources>

@@ -36,17 +36,19 @@ class MatchListLayout(ctx: Context): LinearLayout(ctx) {
                     lparams(width = matchParent, height = matchParent)
 
                     relativeLayout {
+                        lparams(width = matchParent, height = matchParent)
+                        id = R.id.match_relativeLayout
                         visibility = View.GONE
 
                         imageView {
                             image = ContextCompat.getDrawable(ctx, R.drawable.ic_event_busy)
-                        }.lparams(width = dip(100), height = dip(100)){
+                        }.lparams(width = wrapContent, height = wrapContent){
                             centerInParent()
                         }
                     }
 
                     recyclerView {
-                        id = R.id.match_relativeLayout
+                        id = R.id.match_recyclerView
                         visibility = View.VISIBLE
                         padding = dip(10)
                         layoutManager = LinearLayoutManager(ctx)

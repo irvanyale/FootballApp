@@ -8,23 +8,34 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
+import com.google.gson.Gson
 import com.irvanyale.app.footballapp.R
+import com.irvanyale.app.footballapp.main.MainView
+import com.irvanyale.app.footballapp.model.DetailTeam
 import com.irvanyale.app.footballapp.model.Match
+import com.irvanyale.app.footballapp.network.ApiRepository
+import com.irvanyale.app.footballapp.presenter.MatchPresenter
+import com.irvanyale.app.footballapp.utils.TestContextProvider
+import com.irvanyale.app.footballapp.utils.gone
+import com.irvanyale.app.footballapp.utils.visible
 import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.find
+import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
-class PrevMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallback {
+class PrevMatchFragment : Fragment(), AnkoComponent<Context>, MainView, OnItemClickCallback {
 
     private var matches: MutableList<Match> = mutableListOf()
     private lateinit var adapter: MatchAdapter
@@ -33,6 +44,9 @@ class PrevMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
     private lateinit var listMatch: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var spinner: Spinner
+    private lateinit var presenter: MatchPresenter
+    private lateinit var leagueId: String
+    private lateinit var leagueIds: IntArray
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -40,16 +54,38 @@ class PrevMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
         initView()
 
         val spinnerItems = resources.getStringArray(R.array.league)
+        leagueIds = resources.getIntArray(R.array.leagueId)
+
         val spinnerAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
         spinner.adapter = spinnerAdapter
 
         adapter = MatchAdapter(matches, this)
         listMatch.adapter = adapter
+
+        val request = ApiRepository()
+        val gson = Gson()
+
+        presenter = MatchPresenter(this, request, gson, TestContextProvider())
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                leagueId = leagueIds[position].toString()
+                presenter.getPrevMatches(leagueId)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        swipeRefresh.onRefresh {
+            presenter.getPrevMatches(leagueId)
+        }
     }
 
-    private fun initView(){
+    private fun initView() {
+        swipeRefresh = find(R.id.match_swipeRefresh)
         spinner = find(R.id.match_spinner)
-        listMatch = find(R.id.match_relativeLayout)
+        listMatch = find(R.id.match_recyclerView)
+        rllyMatchNotAvailable = find(R.id.match_relativeLayout)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,6 +101,32 @@ class PrevMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
     }
 
     override fun onItemClicked(match: Match) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
+
+    override fun showLoading() {
+        swipeRefresh.isRefreshing = true
+    }
+
+    override fun hideLoading() {
+        swipeRefresh.isRefreshing = false
+    }
+
+    override fun showMatch(data: List<Match>?) {
+        swipeRefresh.isRefreshing = false
+        matches.clear()
+        if (data != null){
+            matches.addAll(data)
+            listMatch.visible()
+            rllyMatchNotAvailable.gone()
+        } else {
+            listMatch.gone()
+            rllyMatchNotAvailable.visible()
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun showHomeTeamLogo(data: List<DetailTeam>?) {}
+
+    override fun showAwayTeamLogo(data: List<DetailTeam>?) {}
 }

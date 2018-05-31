@@ -16,16 +16,16 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MatchAdapter (private val matchs: List<Match>, private val onItemClickCallback: OnItemClickCallback)
+class MatchAdapter (private val matches: List<Match>, private val onItemClickCallback: OnItemClickCallback)
     : RecyclerView.Adapter<MatchViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
         return MatchViewHolder(MatchUI().createView(AnkoContext.create(parent.context, parent)))
     }
 
-    override fun getItemCount(): Int = matchs.size
+    override fun getItemCount(): Int = matches.size
 
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
-        holder.bindItem(matchs[position], onItemClickCallback)
+        holder.bindItem(matches[position], onItemClickCallback)
     }
 }
 
@@ -36,7 +36,6 @@ class MatchUI : AnkoComponent<ViewGroup> {
             linearLayout {
                 id = R.id.lnly_match
                 orientation = LinearLayout.VERTICAL
-                padding = dip(6)
                 lparams(width = matchParent, height = wrapContent)
 
                 textView {

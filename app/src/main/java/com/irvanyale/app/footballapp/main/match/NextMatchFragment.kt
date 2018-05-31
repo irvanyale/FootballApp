@@ -12,19 +12,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewManager
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.Spinner
+import android.widget.*
+import com.google.gson.Gson
 import com.irvanyale.app.footballapp.R
+import com.irvanyale.app.footballapp.main.MainView
+import com.irvanyale.app.footballapp.model.DetailTeam
 import com.irvanyale.app.footballapp.model.Match
+import com.irvanyale.app.footballapp.network.ApiRepository
+import com.irvanyale.app.footballapp.presenter.MatchPresenter
+import com.irvanyale.app.footballapp.utils.TestContextProvider
+import com.irvanyale.app.footballapp.utils.gone
+import com.irvanyale.app.footballapp.utils.visible
 import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.ctx
+import org.jetbrains.anko.support.v4.find
+import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
-class NextMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallback {
+class NextMatchFragment : Fragment(), AnkoComponent<Context>, MainView, OnItemClickCallback {
 
     private var matches: MutableList<Match> = mutableListOf()
     private lateinit var adapter: MatchAdapter
@@ -33,16 +40,47 @@ class NextMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
     private lateinit var listMatch: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var spinner: Spinner
+    private lateinit var presenter: MatchPresenter
+    private lateinit var leagueId: String
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        initView()
+
         val spinnerItems = resources.getStringArray(R.array.league)
+        val leagueIds = resources.getIntArray(R.array.leagueId)
+
         val spinnerAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
         spinner.adapter = spinnerAdapter
 
         adapter = MatchAdapter(matches, this)
         listMatch.adapter = adapter
+
+        val request = ApiRepository()
+        val gson = Gson()
+
+        presenter = MatchPresenter(this, request, gson, TestContextProvider())
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                leagueId = leagueIds[position].toString()
+                presenter.getNextMatches(leagueId)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        swipeRefresh.onRefresh {
+            presenter.getNextMatches(leagueId)
+        }
+    }
+
+    private fun initView(){
+        swipeRefresh = find(R.id.match_swipeRefresh)
+        spinner = find(R.id.match_spinner)
+        listMatch = find(R.id.match_recyclerView)
+        rllyMatchNotAvailable = find(R.id.match_relativeLayout)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,46 +88,7 @@ class NextMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
     }
 
     override fun createView(ui: AnkoContext<Context>): View = with(ui){
-        linearLayout {
-            lparams(width = matchParent, height = matchParent)
-            padding = dip(16)
-            orientation = LinearLayout.VERTICAL
-
-            spinner = spinner {}.lparams(width = matchParent, height = wrapContent){
-                bottomMargin = dip(10)
-            }
-
-            swipeRefresh = swipeRefreshLayout {
-                id = R.id.swipeRefresh
-                setColorSchemeResources(R.color.colorAccent,
-                        android.R.color.holo_green_light,
-                        android.R.color.holo_orange_light,
-                        android.R.color.holo_red_light)
-
-                relativeLayout {
-                    lparams(width = matchParent, height = matchParent)
-
-                    rllyMatchNotAvailable = relativeLayout {
-                        visibility = View.GONE
-
-                        imageView {
-                            image = ContextCompat.getDrawable(ctx, R.drawable.ic_event_busy)
-                        }.lparams(width = dip(100), height = dip(100)){
-                            centerInParent()
-                        }
-                    }
-
-                    listMatch = recyclerView {
-                        id = R.id.rly_match
-                        visibility = View.VISIBLE
-                        padding = dip(10)
-                        layoutManager = LinearLayoutManager(ctx)
-                        addItemDecoration(DividerItemDecoration(ctx, DividerItemDecoration.VERTICAL))
-
-                    }.lparams(width = matchParent, height = matchParent)
-                }
-            }
-        }
+        customMatchListLayout {}
     }
 
     inline fun ViewManager.customMatchListLayout(theme: Int = 0, init: MatchListLayout.() -> Unit): MatchListLayout {
@@ -97,6 +96,32 @@ class NextMatchFragment : Fragment(), AnkoComponent<Context>, OnItemClickCallbac
     }
 
     override fun onItemClicked(match: Match) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
+
+    override fun showLoading() {
+        swipeRefresh.isRefreshing = true
+    }
+
+    override fun hideLoading() {
+        swipeRefresh.isRefreshing = false
+    }
+
+    override fun showMatch(data: List<Match>?) {
+        swipeRefresh.isRefreshing = false
+        matches.clear()
+        if (data != null){
+            matches.addAll(data)
+            listMatch.visible()
+            rllyMatchNotAvailable.gone()
+        } else {
+            listMatch.gone()
+            rllyMatchNotAvailable.visible()
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun showHomeTeamLogo(data: List<DetailTeam>?) {}
+
+    override fun showAwayTeamLogo(data: List<DetailTeam>?) {}
 }
