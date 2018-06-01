@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
 import com.irvanyale.app.footballapp.R
+import com.irvanyale.app.footballapp.main.favorite.FavoriteFragment
 import com.irvanyale.app.footballapp.main.match.MatchFragment
 import com.irvanyale.app.footballapp.main.team.TeamFragment
 import org.jetbrains.anko.*
@@ -76,11 +77,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadFavoriteFragment(savedInstanceState: Bundle?){
-        /*if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.main_container, MatchFragment(), MatchFragment::class.simpleName)
+                    .replace(R.id.main_container, FavoriteFragment(), FavoriteFragment::class.simpleName)
                     .commit()
-        }*/
+        }
     }
 }

@@ -4,16 +4,20 @@ import android.database.sqlite.SQLiteConstraintException
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.AppBarLayout.LayoutParams.*
 import android.support.design.widget.CollapsingToolbarLayout
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
 import com.irvanyale.app.footballapp.R
@@ -42,6 +46,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
         const val FOOTBALL_TEAM_ID: String = "FootballTeamId"
     }
 
+    private lateinit var coordinatorLayout: CoordinatorLayout
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
@@ -53,6 +58,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
     private lateinit var team: Team
     private lateinit var teamId: String
     private lateinit var teamOverview: String
+    private lateinit var teamName: String
     private lateinit var presenter: TeamsPresenter
 
     private var menuItem: Menu? = null
@@ -62,7 +68,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        coordinatorLayout {
+        coordinatorLayout = coordinatorLayout {
             lparams(width = matchParent, height = matchParent)
             fitsSystemWindows = true
 
@@ -73,27 +79,38 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
                     toolbar = themedToolbar {
                         R.style.ThemeOverlay_AppCompat_Light
                         backgroundColor = ContextCompat.getColor(ctx, R.color.colorPrimary)
-                    }.lparams(width = matchParent, height = dip(260)) {
+                    }.lparams(width = matchParent, height = dip(300)) {
                         collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
                     }
 
                     linearLayout {
+                        orientation = LinearLayout.VERTICAL
 
-                        teamLogoImgview = imageView().lparams(width = matchParent, height = dip(100)){
-                            gravity = Gravity.CENTER
+                        teamLogoImgview = imageView().lparams(width = dip(100), height = dip(100)){
+                            gravity = Gravity.CENTER_HORIZONTAL
                             bottomMargin = dip(10)
                         }
 
-                        teamNameTxtview = textView{textSize = sp(18).toFloat() }.lparams(width = matchParent, height = wrapContent){
-                            gravity = Gravity.CENTER_HORIZONTAL
+                        teamNameTxtview = textView{
+                            textSize = sp(10).toFloat()
+                            gravity = Gravity.CENTER
+                        }.lparams(width = matchParent, height = wrapContent){
+                            gravity = Gravity.CENTER
                         }
 
-                        teamEstTxtview = textView{textSize = sp(14).toFloat() }.lparams(width = matchParent, height = wrapContent){
-                            gravity = Gravity.CENTER_HORIZONTAL
+                        teamEstTxtview = textView{
+                            textSize = sp(6).toFloat()
+                            gravity = Gravity.CENTER
+                        }.lparams(width = matchParent, height = wrapContent){
+                            gravity = Gravity.CENTER
                         }
 
-                        teamStadiumTxtview = textView{textSize = sp(16).toFloat() }.lparams(width = matchParent, height = wrapContent){
-                            gravity = Gravity.CENTER_HORIZONTAL
+                        teamStadiumTxtview = textView{
+                            textSize = sp(8).toFloat()
+                            gravity = Gravity.CENTER
+                        }.lparams(width = matchParent, height = wrapContent){
+                            gravity = Gravity.CENTER
+                            bottomMargin = dip(10)
                         }
 
                     }.lparams(width = matchParent, height = wrapContent){
@@ -110,8 +127,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
                     }
 
                 }.lparams(width = matchParent, height = matchParent) {
-                    scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
-                            AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                    scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED
                 }
 
             }.lparams(width = matchParent, height = wrapContent)
@@ -121,17 +137,24 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
                         android.R.color.holo_green_light,
                         android.R.color.holo_orange_light,
                         android.R.color.holo_red_light)
-            }
 
-            viewPager = viewPager().lparams(width = matchParent, height = matchParent){
+                viewPager = viewPager{
+                    id = R.id.viewPager_match
+                }
+
+            }.lparams(width = matchParent, height = matchParent){
                 behavior = AppBarLayout.ScrollingViewBehavior()
             }
         }
 
-        teamId = intent.getStringExtra(FOOTBALL_TEAM_ID)
+        teamId = intent.getStringExtra(FOOTBALL_TEAM_ID) ?: "-"
 
-        setupViewpager(viewPager)
-        tabLayout.setupWithViewPager(viewPager)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = ""
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        teamOverview = "-"
+        teamName = "-"
 
         val request = ApiRepository()
         val gson = Gson()
@@ -147,8 +170,8 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
 
     private fun setupViewpager(viewPager: ViewPager){
         val viewPagerAdapter = PagerAdapter(supportFragmentManager)
-        viewPagerAdapter.addFragment(TeamOverviewFragment.newInstance("teamOverview"), getString(R.string.title_overview))
-        viewPagerAdapter.addFragment(TeamPlayersFragment(), getString(R.string.title_player))
+        viewPagerAdapter.addFragment(TeamOverviewFragment.newInstance(teamOverview), getString(R.string.title_overview))
+        viewPagerAdapter.addFragment(TeamPlayersFragment.newInstance(teamName), getString(R.string.title_player))
         viewPager.adapter = viewPagerAdapter
     }
 
@@ -194,7 +217,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
     private fun favoriteState(){
         database.use {
             val result = select(TeamFavorite.TABLE_TEAM_FAVORITE)
-                    .whereArgs("(MATCH_ID = {id})",
+                    .whereArgs("(TEAM_ID = {id})",
                             "id" to teamId)
             val favorite = result.parseList(classParser<TeamFavorite>())
             if (!favorite.isEmpty()) isFavorite = true
@@ -219,21 +242,21 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
                         TeamFavorite.TEAM_STADIUM to team.teamStadium,
                         TeamFavorite.TEAM_DESC to team.teamDescription)
             }
-            snackbar(swipeRefresh, "Added to favorite").show()
+            snackbar(coordinatorLayout, "Added to favorite").show()
         } catch (e: SQLiteConstraintException){
-            snackbar(swipeRefresh, e.localizedMessage).show()
+            snackbar(coordinatorLayout, e.localizedMessage).show()
         }
     }
 
     private fun removeFromFavorite(){
         try {
             database.use {
-                delete(TeamFavorite.TABLE_TEAM_FAVORITE, "(MATCH_ID = {id})",
+                delete(TeamFavorite.TABLE_TEAM_FAVORITE, "(TEAM_ID = {id})",
                         "id" to teamId)
             }
-            snackbar(swipeRefresh, "Removed to favorite").show()
+            snackbar(coordinatorLayout, "Removed to favorite").show()
         } catch (e: SQLiteConstraintException){
-            snackbar(swipeRefresh, e.localizedMessage).show()
+            snackbar(coordinatorLayout, e.localizedMessage).show()
         }
     }
 
@@ -246,6 +269,7 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
     }
 
     override fun showTeamList(data: List<Team>?) {
+        swipeRefresh.isRefreshing = false
         if (data != null && data.isNotEmpty()){
 
             team = Team(data[0].teamId,
@@ -257,8 +281,12 @@ class TeamDetailActivity : AppCompatActivity(), TeamsView {
             )
 
             teamOverview = data[0].teamDescription ?: "-"
+            teamName = data[0].teamName ?: "-"
 
             initData(data[0])
+            setupViewpager(viewPager)
+            tabLayout.setupWithViewPager(viewPager)
+
             isDataReady = true
         }
     }

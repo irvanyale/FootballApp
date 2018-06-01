@@ -9,6 +9,7 @@
 
     <item name="tabLayout_match" type="id" />
     <item name="viewPager_match" type="id" />
+    <item name="viewPager_team" type="id" />
 
     <item name="team_badge" type="id" />
     <item name="team_name" type="id" />

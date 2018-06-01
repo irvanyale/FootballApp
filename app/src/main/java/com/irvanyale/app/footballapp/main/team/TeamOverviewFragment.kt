@@ -47,7 +47,7 @@ class TeamOverviewFragment : Fragment(), AnkoComponent<Context> {
             padding = dip(16)
 
             teamOverviewTxtview = textView {
-                textSize = sp(14).toFloat()
+                textSize = sp(8).toFloat()
             }.lparams(width = matchParent, height = wrapContent)
         }
     }
