@@ -1,24 +1,17 @@
-package com.irvanyale.app.footballapp.main.match
+package com.irvanyale.app.footballapp.main
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 
-class MatchPagerAdapter(fragmentManager: FragmentManager) :
+class PagerAdapter(fragmentManager: FragmentManager) :
         FragmentStatePagerAdapter(fragmentManager) {
 
     private var fragmentList: MutableList<Fragment> = mutableListOf()
     private var titleList: MutableList<String> = mutableListOf()
 
     override fun getItem(position: Int): Fragment {
-        var fragment: Fragment? = null
-        fragment = when (position) {
-            0 -> NextMatchFragment()
-            1 -> PrevMatchFragment()
-            else -> NextMatchFragment()
-        }
-
-        return fragment
+        return fragmentList[position]
     }
 
     override fun getCount(): Int {

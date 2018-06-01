@@ -5,5 +5,5 @@ import com.irvanyale.app.footballapp.model.Team
 interface TeamsView {
     fun showLoading()
     fun hideLoading()
-    fun showTeamList(data: List<Team>)
+    fun showTeamList(data: List<Team>?)
 }

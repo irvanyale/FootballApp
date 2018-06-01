@@ -25,7 +25,6 @@ class TeamsAdapter (private val teams: List<Team>, private val listener: (Team) 
     override fun onBindViewHolder(holder: TeamViewHolder, position: Int) {
         holder.bindItem(teams[position], listener)
     }
-
 }
 
 class TeamUI : AnkoComponent<ViewGroup> {

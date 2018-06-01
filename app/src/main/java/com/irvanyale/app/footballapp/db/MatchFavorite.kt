@@ -1,6 +1,6 @@
-package com.irvanyale.app.project4.db
+package com.irvanyale.app.footballapp.db
 
-data class Favorite(
+data class MatchFavorite(
         val id: Long?,
         val matchId: String?,
         val date: String?,
@@ -10,7 +10,7 @@ data class Favorite(
         val awayScore: String?) {
 
     companion object {
-        const val TABLE_FAVORITE: String = "TABLE_FAVORITE"
+        const val TABLE_MATCH_FAVORITE: String = "TABLE_MATCH_FAVORITE"
         const val ID: String = "ID_"
         const val MATCH_ID: String = "MATCH_ID"
         const val MATCH_DATE: String = "MATCH_DATE"

@@ -16,6 +16,9 @@
     <item name="rly_match" type="id" />
     <item name="swipeRefresh" type="id" />
     <item name="lnly_match" type="id" />
+    <item name="img_pl_pic" type="id" />
+    <item name="txt_pl_name" type="id" />
+    <item name="txt_pl_position" type="id" />
     <item name="txt_date_match" type="id" />
     <item name="txt_time_match" type="id" />
     <item name="txt_home_score" type="id" />

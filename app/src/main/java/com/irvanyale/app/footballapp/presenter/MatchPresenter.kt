@@ -85,13 +85,14 @@ class MatchPresenter(private val view: MainView,
 
     fun getSearchMatch(query: String?) {
         view.showLoading()
-        async(context.main) {
+        async(UI) {
             val data = bg {
                 gson.fromJson(apiRepository
                         .doRequest(TheSportDBApi.getSearchMatch(query)),
                         MatchSearchResponse::class.java
                 )
             }
+            Log.d("LOL", "DATA "+data.await().matches)
             view.showMatch(data.await().matches)
             view.hideLoading()
         }

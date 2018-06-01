@@ -21,6 +21,7 @@
         <activity android:name=".main.team.TeamDetailActivity" />
         <activity android:name=".main.match.MatchSearchActivity" />
         <activity android:name=".main.match.DetailMatchActivity" />
+        <activity android:name=".main.team.PlayerDetailActivity"></activity>
     </application>
 
 </manifest>

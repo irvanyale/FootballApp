@@ -91,7 +91,7 @@ class NextMatchFragment : Fragment(), AnkoComponent<Context>, MainView, OnItemCl
         customMatchListLayout {}
     }
 
-    inline fun ViewManager.customMatchListLayout(theme: Int = 0, init: MatchListLayout.() -> Unit): MatchListLayout {
+    private inline fun ViewManager.customMatchListLayout(theme: Int = 0, init: MatchListLayout.() -> Unit): MatchListLayout {
         return ankoView({ MatchListLayout(it) }, theme = theme, init = init)
     }
 

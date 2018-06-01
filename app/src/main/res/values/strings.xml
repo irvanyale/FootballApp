@@ -7,7 +7,10 @@
     <string name="search">Search</string>
 
     <string name="title_next">Next</string>
-    <string name="title_prev">Prev</string>
+    <string name="title_prev">Past</string>
+
+    <string name="title_overview">Overview</string>
+    <string name="title_player">Player</string>
 
     <string name="v">v</string>
     <string name="goals">Goals</string>
@@ -38,5 +41,9 @@
         <item>4335</item>
         <item>4346</item>
     </array>
+
+    <!--dummy-->
+    <string name="pl_name">C.Ronaldo</string>
+    <string name="pl_position">Forward</string>
 
 </resources>

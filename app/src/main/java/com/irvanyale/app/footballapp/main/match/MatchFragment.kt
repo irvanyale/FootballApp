@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams.*
-import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -16,12 +15,12 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.viewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.text.Layout
+import android.text.TextUtils
+import com.irvanyale.app.footballapp.main.PagerAdapter
 import org.jetbrains.anko.appcompat.v7.themedToolbar
-import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.design.*
-import org.jetbrains.anko.support.v4.find
 
 
 class MatchFragment : Fragment(), AnkoComponent<Context> {
@@ -80,7 +79,7 @@ class MatchFragment : Fragment(), AnkoComponent<Context> {
     }
 
     private fun setupViewpager(viewPager: ViewPager){
-        val viewPagerAdapter = MatchPagerAdapter(childFragmentManager)
+        val viewPagerAdapter = PagerAdapter(childFragmentManager)
         viewPagerAdapter.addFragment(NextMatchFragment(), getString(title_next))
         viewPagerAdapter.addFragment(PrevMatchFragment(), getString(title_prev))
         viewPager.adapter = viewPagerAdapter
